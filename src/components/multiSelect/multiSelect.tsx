@@ -1,21 +1,46 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./multySelect.scss";
 
 import type { Option, MultiSelectProps } from "./types";
 
 const MultiSelect: React.FC<MultiSelectProps> = ({ options }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  console.log(options);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="multi-select" onClick={() => setIsOpen(!isOpen)}>
+    <div className="multi-select" ref={wrapperRef}>
+      <div className="selected-items">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search ..."
+          onFocus={() => setIsOpen(true)}
+        />
+      </div>
       {isOpen && (
-        <ul>
+        <ul className="items-list">
           {options?.map((option) => (
-            <li className="multi-select-item">
-              <span className="multi-select-item-text">{option.label}</span>
+            <li key={option.value} className="item">
+              <span className="item-text">{option.label}</span>
               <span>
-                <img className="multi-select-item-icon" src={option.icon} alt={option.value} />
+                <img
+                  className="item-icon"
+                  src={option.icon}
+                  alt={option.value}
+                />
               </span>
             </li>
           ))}
