@@ -6,7 +6,7 @@ import type { Option, MultiSelectProps } from "./types";
 const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
-
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,13 +40,41 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
     }
   };
 
+  const toggleOption = (option: Option) => {
+    const alreadySelected = selectedOptions.some(
+      (item) => item.value === option.value
+    );
+    if (alreadySelected) {
+      setSelectedOptions((prev) =>
+        prev.filter((item) => item.value !== option.value)
+      );
+    } else {
+      setSelectedOptions((prev) => [...prev, option]);
+    }
+  };
   return (
     <div className="multi-select" ref={wrapperRef}>
       <div className="selected-items">
+        {selectedOptions.map((option) => (
+          <div key={option.value} className="tag">
+            {option.label}
+            <span
+              className="remove-tag"
+              onClick={() =>
+                setSelectedOptions((prev) =>
+                  prev.filter((item) => item.value !== option.value)
+                )
+              }
+            >
+              ×
+            </span>
+          </div>
+        ))}
+
         <input
           type="text"
           className="input"
-          placeholder="Select ..."
+          placeholder="Type & Select ..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onFocus={() => setIsOpen(true)}
@@ -57,17 +85,32 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
       {isOpen && (
         <ul className="items-list">
           {options?.map((option: Option) => (
-            <li key={option.value} className="item">
-              <span className="item-text">{option.label}</span>
-              <span>
+            <li
+              key={option.value}
+              className={`item ${
+                selectedOptions.some(
+                  (selected) => selected.value === option.value
+                )
+                  ? "selected"
+                  : ""
+              }`}
+              onClick={() => toggleOption(option)}
+            >
+              <div className="item-content">
+                <span className="item-text">{option.label}</span>
                 {option?.icon && (
-                  <img
-                    className="item-icon"
-                    src={option.icon}
-                    alt={option.value}
-                  />
+                  <span>
+                    <img
+                      className="item-icon"
+                      src={option.icon}
+                      alt={option.value}
+                    />
+                  </span>
                 )}
-              </span>
+              </div>
+              {selectedOptions.some(
+                (selected) => selected.value === option.value
+              ) && <span className="checkmark">✔</span>}
             </li>
           ))}
         </ul>
