@@ -1,3 +1,22 @@
-.multi-select{
-    width: 300px;
+@import "../../styles/variables.scss";
+
+.multi-select {
+  width: 300px;
+  height: 50px;
+  background-color: red;
+  .multi-select-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+    .multi-select-item-text {
+      color: $primary-font-color;
+      font-size: 16px;
+    }
+    .multi-select-item-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
 }

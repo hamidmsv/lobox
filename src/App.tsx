@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./styles/global.scss";
 import MultiSelect from "./components/multiSelect/multiSelect";
 import { options } from "./data/options";
 function App() {
