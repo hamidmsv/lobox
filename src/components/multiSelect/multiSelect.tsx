@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./multiSelect.scss";
 import arrowDownIcn from "../../assets/icons/arrow-down.png";
 import type { Option, MultiSelectProps } from "./types";
+import check from "../../assets/icons/check.png";
 
 const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -57,7 +58,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
       <div className="selected-items">
         {selectedOptions.map((option) => (
           <div key={option.value} className="tag">
-            {option.label}
+            {option.value}
             <span
               className="remove-tag"
               onClick={() =>
@@ -110,7 +111,11 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ options, onAddOption }) => {
               </div>
               {selectedOptions.some(
                 (selected) => selected.value === option.value
-              ) && <span className="checkmark">✔</span>}
+              ) && (
+                <span className="checkmark">
+                  <img src={check} />
+                </span>
+              )}
             </li>
           ))}
         </ul>
