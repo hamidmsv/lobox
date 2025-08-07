@@ -6,4 +6,5 @@ export type Option = {
 
 export interface MultiSelectProps {
   options: Option[];
+  onAddOption: (option: Option) => void;
 }
